@@ -55,11 +55,11 @@ class AuthController extends Controller
             'password' => [
                 'required',
             ],
-            'remember' => 'boolean'
+            'remember_me' => 'boolean'
         ]);
 
-        $remember = $credentials['remember'] ?? false;
-        unset($credentials['remember']);
+        $remember = $credentials['remember_me'] ?? false;
+        unset($credentials['remember_me']);
 
         if(!Auth::attempt($credentials, $remember)) {
             return response([
@@ -84,9 +84,14 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function logout()
     {
-        //
+        $user = Auth::user();
+        $user->currentAccessToken()->delete();
+
+        return response([
+            'success' => true
+        ]);
     }
 
     /**
